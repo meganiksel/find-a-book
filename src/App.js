@@ -8,6 +8,7 @@ import Loading from './components/Loading/Loading';
 import HomePage from './components/HomePage/HomePage';
 import { checkForOfflineMode, setOfflineMode } from './utils/utils';
 import ErrorMessage from './components/ErrorMessage/ErrorMessage';
+import { BooksContext } from './context/BooksContext';
 
 export default function App() {
     const [query, setQuery] = useState('');
@@ -35,22 +36,28 @@ export default function App() {
         setPageNumber(Math.floor(books.length / 10) + 1);
     };
 
+    const context = {
+        books,
+        hasMore,
+        loading,
+        count,
+        error,
+        query,
+        offline,
+        handleSearch,
+        handleScroll,
+        handleChange
+    };
+
     return (
         <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Header offline={offline} onChangeHandler={handleChange} />
-            {error && <ErrorMessage />}
-            <HomePage
-                books={books}
-                count={count}
-                hasMore={hasMore}
-                loading={loading}
-                query={query}
-                offline={offline}
-                handleSearch={handleSearch}
-                handleScroll={handleScroll}
-            />
-            {loading && <Loading />}
+            <BooksContext.Provider value={context}>
+                <CssBaseline />
+                <Header />
+                {error && <ErrorMessage />}
+                <HomePage />
+                {loading && <Loading />}
+            </BooksContext.Provider>
         </ThemeProvider>
     );
 }
