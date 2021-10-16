@@ -25,14 +25,14 @@ export default function App() {
         setPageNumber(1);
     };
 
-    const handleClick = () => {
-        setPageNumber((prevPageNumber) => prevPageNumber + 1);
-    };
-
     const handleChange = () => {
         setOfflineMode(!offline);
         setOffline(!offline);
         setQuery('');
+    };
+
+    const handleScroll = () => {
+        setPageNumber(Math.floor(books.length / 10) + 1);
     };
 
     return (
@@ -48,7 +48,7 @@ export default function App() {
                 query={query}
                 offline={offline}
                 handleSearch={handleSearch}
-                handleClick={handleClick}
+                handleScroll={handleScroll}
             />
             {loading && <Loading />}
         </ThemeProvider>

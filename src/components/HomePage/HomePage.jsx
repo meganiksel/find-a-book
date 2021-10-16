@@ -1,25 +1,41 @@
-import React from 'react';
+import React, { forwardRef, useRef } from 'react';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import styles from './styles';
 import ListItem from '@mui/material/ListItem';
 import BookCard from '../BookCard/BookCard';
-import MoreResultsButton from '../MoreResultsButton/MoreResultsButton';
 import Container from '@mui/material/Container';
 import Search from '../Search/Search';
+import useScroll from '../../hooks/useScroll';
+
+const BooksList = forwardRef(({ books }, ref) => {
+  const { list, listItem } = styles;
+  return (<List sx={list}>
+    {books.map((book, index) => {
+      const { title, author } = book;
+      const lastElementRef = index === books.length - 1 ? { ref } : {};
+
+      return <ListItem {...lastElementRef} key={`${title}-${author}-${index}`} sx={listItem} >
+        <BookCard author={author} title={title} />
+      </ListItem>
+    })}
+  </List>)
+})
 
 const HomePage = ({
     query,
     count,
     handleSearch,
     books,
-    hasMore,
-    loading,
-    handleClick,
-    offline
+    offline,
+    handleScroll
 }) => {
-    const { list, listItem, container, total } = styles;
+    const { container, total } = styles;
+
+    const scrollableElRef = useRef(null);
+    const triggerRef = useRef(null);
+
+    useScroll(scrollableElRef, triggerRef, handleScroll);
 
     return (
         <Container sx={container} maxWidth="lg">
@@ -29,25 +45,9 @@ const HomePage = ({
                     Total books found: {count}
                 </Typography>
             )}
-            <Box>
-                <List sx={list}>
-                    {books.map((book, index) => {
-                        const { title, author } = book;
-
-                        return (
-                            <ListItem
-                                key={`${title}-${author}-${index}`}
-                                sx={listItem}
-                            >
-                                <BookCard author={author} title={title} />
-                            </ListItem>
-                        );
-                    })}
-                </List>
-                {hasMore && !loading && (
-                    <MoreResultsButton onClickHandler={handleClick} />
-                )}
-            </Box>
+            <div ref={scrollableElRef}>
+                <BooksList ref={triggerRef} books={books}/>
+            </div>
         </Container>
     );
 };
