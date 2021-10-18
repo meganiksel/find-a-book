@@ -22,7 +22,7 @@ export default function useScroll(
         if (!currentTrigger) return;
 
         observer.current = new IntersectionObserver(([target]) => {
-            if (target.isIntersecting) onTriggerCallback();
+            if (target.isIntersecting) onTriggerCallback(target);
         }, options);
 
         observer.current.observe(currentTrigger);

@@ -2,7 +2,12 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { booksMock } from '../utils/fixtures';
 
-export default function useBookSearch(query, pageNumber, offline) {
+export default function useBookSearch(
+    query,
+    pageNumber,
+    offline,
+    requestLimit
+) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [books, setBooks] = useState([]);
@@ -33,7 +38,7 @@ export default function useBookSearch(query, pageNumber, offline) {
                 method: 'GET',
                 timeout: 5000,
                 url: 'https://openlibrary.org/search.json',
-                params: { q: query, page: pageNumber, limit: 10 },
+                params: { q: query, page: pageNumber, limit: requestLimit },
                 cancelToken: new axios.CancelToken((c) => (cancel = c))
             })
                 .then((res) => {
@@ -59,7 +64,7 @@ export default function useBookSearch(query, pageNumber, offline) {
                 });
             return () => cancel();
         }
-    }, [query, pageNumber, offline]);
+    }, [query, pageNumber, offline, requestLimit]);
 
     return { loading, error, books, hasMore, count };
 }

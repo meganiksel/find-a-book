@@ -2,11 +2,10 @@ import React, { forwardRef, useContext } from 'react';
 import { List, ListItem } from '@mui/material';
 import { BooksContext } from '../../context/BooksContext';
 import BookCard from '../BookCard/BookCard';
-import styles from './styles';
 
 const BooksList = forwardRef((props, ref) => {
     const { books } = useContext(BooksContext);
-    const { list, listItem } = styles;
+    const { list, listItem } = props.styles;
     return (
         <List sx={list}>
             {books.map((book, index) => {

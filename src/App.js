@@ -10,6 +10,8 @@ import { checkForOfflineMode, setOfflineMode } from './utils/utils';
 import ErrorMessage from './components/ErrorMessage/ErrorMessage';
 import { BooksContext } from './context/BooksContext';
 
+const requestLimit = 10;
+
 export default function App() {
     const [query, setQuery] = useState('');
     const [pageNumber, setPageNumber] = useState(1);
@@ -18,7 +20,8 @@ export default function App() {
     const { books, hasMore, loading, count, error } = useBookSearch(
         query,
         pageNumber,
-        offline
+        offline,
+        requestLimit
     );
 
     const handleSearch = (e) => {
@@ -44,6 +47,7 @@ export default function App() {
         error,
         query,
         offline,
+        requestLimit,
         handleSearch,
         handleScroll,
         handleChange
